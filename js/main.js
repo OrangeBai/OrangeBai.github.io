@@ -1,259 +1,228 @@
-(function($) {
-
-	skel.breakpoints({
-		xlarge:	'(max-width: 1680px)',
-		large:	'(max-width: 1280px)',
-		medium:	'(max-width: 980px)',
-		small:	'(max-width: 736px)',
-		xsmall:	'(max-width: 480px)',
-		xxsmall: '(max-width: 360px)'
-	});
-
-	/**
-	 * Applies parallax scrolling to an element's background image.
-	 * @return {jQuery} jQuery object.
-	 */
-	$.fn._parallax = function(intensity) {
-
-		var	$window = $(window),
-			$this = $(this);
-
-		if (this.length == 0 || intensity === 0)
-			return $this;
-
-		if (this.length > 1) {
-
-			for (var i=0; i < this.length; i++)
-				$(this[i])._parallax(intensity);
-
-			return $this;
-
-		}
-
-		if (!intensity)
-			intensity = 0.25;
-
-		$this.each(function() {
-
-			var $t = $(this),
-				$bg = $('<div class="bg"></div>').appendTo($t),
-				on, off;
-
-			on = function() {
-
-				$bg
-					.removeClass('fixed')
-					.css('transform', 'none');
-
-				$window
-					.on('scroll._parallax', function() {
-
-						$bg.css('transform', 'none');
-
-					});
-			};
-
-			off = function() {
-
-				$bg
-					.addClass('fixed')
-					.css('transform', 'none');
-
-				$window
-					.off('scroll._parallax');
-
-			};
-
-			// Disable parallax on ..
-				if (skel.vars.browser == 'ie'		// IE
-				||	skel.vars.browser == 'edge'		// Edge
-				||	window.devicePixelRatio > 1		// Retina/HiDPI (= poor performance)
-				||	skel.vars.mobile)				// Mobile devices
-					off();
-
-			// Enable everywhere else.
-				else {
-
-					skel.on('!large -large', on);
-					skel.on('+large', off);
-
-				}
-
-		});
-
-		$window
-			.off('load._parallax resize._parallax')
-			.on('load._parallax resize._parallax', function() {
-				$window.trigger('scroll');
-			});
-
-		return $(this);
-
-	};
-
-	$(function() {
-
-		var	$window = $(window),
-			$body = $('body'),
-			$wrapper = $('#wrapper'),
-			$header = $('#header'),
-			$nav = $('#nav'),
-			$main = $('#main'),
-			$navPanelToggle, $navPanel, $navPanelInner;
-
-		// Disable animations/transitions until the page has loaded.
-			$window.on('load', function() {
-				window.setTimeout(function() {
-					$body.removeClass('is-loading');
-				}, 100);
-			});
-
-		// Prioritize "important" elements on medium.
-			skel.on('+medium -medium', function() {
-				$.prioritize(
-					'.important\\28 medium\\29',
-					skel.breakpoint('medium').active
-				);
-			});
-
-		// Scrolly.
-			$('.scrolly').scrolly();
-
-		// Background.
-			$wrapper._parallax(0.925);
-
-		// Nav Panel.
-
-			// Toggle.
-				$navPanelToggle = $(
-					'<a href="#navPanel" id="navPanelToggle">Menu</a>'
-				)
-					.appendTo($wrapper);
-
-				// Change toggle styling once we've scrolled past the header.
-					$header.scrollex({
-						bottom: '5vh',
-						enter: function() {
-							$navPanelToggle.removeClass('alt');
-						},
-						leave: function() {
-							$navPanelToggle.addClass('alt');
-						}
-					});
-
-			// Panel.
-				$navPanel = $(
-					'<div id="navPanel">' +
-						'<nav>' +
-						'</nav>' +
-						'<a href="#navPanel" class="close"></a>' +
-					'</div>'
-				)
-					.appendTo($body)
-					.panel({
-						delay: 500,
-						hideOnClick: true,
-						hideOnSwipe: true,
-						resetScroll: true,
-						resetForms: true,
-						side: 'right',
-						target: $body,
-						visibleClass: 'is-navPanel-visible'
-					});
-
-				// Get inner.
-					$navPanelInner = $navPanel.children('nav');
-
-				// Move nav content on breakpoint change.
-					var $navContent = $nav.children();
-
-					skel.on('!medium -medium', function() {
-
-						// NavPanel -> Nav.
-							$navContent.appendTo($nav);
-
-						// Flip icon classes.
-							$nav.find('.icons, .icon')
-								.removeClass('alt');
-
-					});
-
-					skel.on('+medium', function() {
-
-						// Nav -> NavPanel.
-						$navContent.appendTo($navPanelInner);
-
-						// Flip icon classes.
-							$navPanelInner.find('.icons, .icon')
-								.addClass('alt');
-
-					});
-
-				// Hack: Disable transitions on WP.
-					if (skel.vars.os == 'wp'
-					&&	skel.vars.osVersion < 10)
-						$navPanel
-							.css('transition', 'none');
-
-		// Intro.
-			var $intro = $('#intro');
-
-			if ($intro.length > 0) {
-
-				// Hack: Fix flex min-height on IE.
-					if (skel.vars.browser == 'ie') {
-						$window.on('resize.ie-intro-fix', function() {
-
-							var h = $intro.height();
-
-							if (h > $window.height())
-								$intro.css('height', 'auto');
-							else
-								$intro.css('height', h);
-
-						}).trigger('resize.ie-intro-fix');
-					}
-
-				// Hide intro on scroll (> small).
-					skel.on('!small -small', function() {
-
-						$main.unscrollex();
-
-						$main.scrollex({
-							mode: 'bottom',
-							top: '25vh',
-							bottom: '-50vh',
-							enter: function() {
-								$intro.addClass('hidden');
-							},
-							leave: function() {
-								$intro.removeClass('hidden');
-							}
-						});
-
-					});
-
-				// Hide intro on scroll (<= small).
-					skel.on('+small', function() {
-
-						$main.unscrollex();
-
-						$main.scrollex({
-							mode: 'middle',
-							top: '15vh',
-							bottom: '-15vh',
-							enter: function() {
-								$intro.addClass('hidden');
-							},
-							leave: function() {
-								$intro.removeClass('hidden');
-							}
-						});
-
-				});
-
-			}
-
-	});
-
-})(jQuery);
+/* eslint-disable node/no-unsupported-features/node-builtins */
+// (mainJs(jQuery, window.moment, window.ClipboardJS, window.IcarusThemeSettings));
+
+function loadMainJs($, moment, ClipboardJS, config) {
+    if (!$('.columns .column-right-shadow').children().length) {
+        $('.columns .column-right-shadow').append($('.columns .column-right').children().clone());
+    }
+
+    $('.article img:not(".not-gallery-item")').each(function () {
+        // wrap images with link and add caption if possible
+        if ($(this).parent('a').length === 0) {
+            $(this).wrap('<a class="gallery-item" href="' + $(this).attr('src') + '"></a>');
+            if (this.alt) {
+                $(this).after('<p class="has-text-centered is-size-6 caption">' + this.alt + '</p>');
+            }
+        }
+    });
+
+    // render images
+    if (typeof ($.fn.lightGallery) === 'function') {
+        $('.article').lightGallery({ selector: '.gallery-item', mode: 'lg-fade' });
+    }
+    if (typeof ($.fn.justifiedGallery) === 'function') {
+        if ($('.justified-gallery > p > .gallery-item').length) {
+            $('.justified-gallery > p > .gallery-item').unwrap();
+        }
+        $('.justified-gallery').justifiedGallery({ rowHeight: 230, margins: 4 });
+    }
+
+    if (typeof moment === 'function') {
+        $('.article-meta time').each(function () {
+            $(this).text(moment($(this).attr('datetime')).fromNow());
+        });
+    }
+
+    $('.article > .content > table').each(function () {
+        if ($(this).width() > $(this).parent().width()) {
+            $(this).wrap('<div class="table-overflow"></div>');
+        }
+    });
+
+    function adjustNavbar() {
+        const navbarWidth = $('.navbar-main .navbar-start').outerWidth() + $('.navbar-main .navbar-end').outerWidth();
+        if ($(document).outerWidth() < navbarWidth) {
+            $('.navbar-main .navbar-menu').addClass('justify-content-start');
+        } else {
+            $('.navbar-main .navbar-menu').removeClass('justify-content-start');
+        }
+    }
+    adjustNavbar();
+    $(window).resize(adjustNavbar);
+
+    function toggleFold(codeBlock, isFolded) {
+        const $toggle = $(codeBlock).find('.fold i');
+        !isFolded ? $(codeBlock).removeClass('folded') : $(codeBlock).addClass('folded');
+        !isFolded ? $toggle.removeClass('fa-angle-right') : $toggle.removeClass('fa-angle-down');
+        !isFolded ? $toggle.addClass('fa-angle-down') : $toggle.addClass('fa-angle-right');
+    }
+
+    function createFoldButton(fold) {
+        return '<span class="fold">' + (fold === 'unfolded' ? '<i class="fas fa-angle-down"></i>' : '<i class="fas fa-angle-right"></i>') + '</span>';
+    }
+
+    $('figure.highlight table').wrap('<div class="highlight-body">');
+    if (typeof config !== 'undefined'
+        && typeof config.article !== 'undefined'
+        && typeof config.article.highlight !== 'undefined') {
+
+        $('figure.highlight').addClass('hljs');
+        $('figure.highlight .code .line span').each(function () {
+            const classes = $(this).attr('class').split(/\s+/);
+            if (classes.length === 1) {
+                $(this).addClass('hljs-' + classes[0]);
+                $(this).removeClass(classes[0]);
+            }
+        });
+
+
+        const clipboard = config.article.highlight.clipboard;
+        const fold = config.article.highlight.fold.trim();
+
+        $('figure.highlight').each(function () {
+            if ($(this).find('figcaption').length) {
+                $(this).find('figcaption').addClass('level is-mobile');
+                $(this).find('figcaption').append('<div class="level-left">');
+                $(this).find('figcaption').append('<div class="level-right">');
+                $(this).find('figcaption div.level-left').append($(this).find('figcaption').find('span'));
+                $(this).find('figcaption div.level-right').append($(this).find('figcaption').find('a'));
+            } else {
+                if (clipboard || fold) {
+                    $(this).prepend('<figcaption class="level is-mobile"><div class="level-left"></div><div class="level-right"></div></figcaption>');
+                }
+            }
+        });
+
+        if (typeof ClipboardJS !== 'undefined' && clipboard) {
+            $('figure.highlight').each(function () {
+                const id = 'code-' + Date.now() + (Math.random() * 1000 | 0);
+                const button = '<a href="javascript:;" class="copy" title="Copy" data-clipboard-target="#' + id + ' .code"><i class="fas fa-copy"></i></a>';
+                $(this).attr('id', id);
+                $(this).find('figcaption div.level-right').append(button);
+            });
+            new ClipboardJS('.highlight .copy'); // eslint-disable-line no-new
+        }
+
+        if (fold) {
+            $('figure.highlight').each(function () {
+                if ($(this).find('figcaption').find('span').length > 0) {
+                    const span = $(this).find('figcaption').find('span');
+                    if (span[0].innerText.indexOf('>folded') > -1) {
+                        span[0].innerText = span[0].innerText.replace('>folded', '');
+                        $(this).find('figcaption div.level-left').prepend(createFoldButton('folded'));
+                        toggleFold(this, true);
+                        return;
+                    }
+                }
+                $(this).find('figcaption div.level-left').prepend(createFoldButton(fold));
+                toggleFold(this, fold === 'folded');
+            });
+
+            $('figure.highlight figcaption .fold').click(function () {
+                const $code = $(this).closest('figure.highlight');
+                toggleFold($code.eq(0), !$code.hasClass('folded'));
+            });
+        }
+    }
+
+    const $toc = $('#toc');
+    if ($toc.length > 0) {
+        const $mask = $('<div>');
+        $mask.attr('id', 'toc-mask');
+
+        $('body').append($mask);
+
+        function toggleToc() { // eslint-disable-line no-inner-declarations
+            $toc.toggleClass('is-active');
+            $mask.toggleClass('is-active');
+        }
+
+        $toc.on('click', toggleToc);
+        $mask.on('click', toggleToc);
+        $('.navbar-main .catalogue').on('click', toggleToc);
+    }
+
+    // hexo-util/lib/is_external_link.js
+    function isExternalLink(input, sitehost, exclude) {
+        try {
+            sitehost = new URL(sitehost).hostname;
+        } catch (e) { }
+
+        if (!sitehost) return false;
+
+        // handle relative url
+        var data;
+        try {
+            data = new URL(input, 'http://' + sitehost);
+        } catch (e) {
+            return false;
+        }
+
+        // handle mailto: javascript: vbscript: and so on
+        if (data.origin === 'null') return false;
+
+        const host = data.hostname;
+
+        if (exclude) {
+            exclude = Array.isArray(exclude) ? exclude : [exclude];
+
+            if (exclude && exclude.length) {
+                for (const i of exclude) {
+                    if (host === i) return false;
+                }
+            }
+        }
+
+        if (host !== sitehost) return true;
+
+        return false;
+    }
+
+    if (typeof config !== 'undefined'
+        && typeof config.site.url !== 'undefined'
+        && typeof config.site.external_link !== 'undefined'
+        && config.site.external_link.enable) {
+        $('.article .content a').filter((i, link) => {
+            return link.href
+                && !$(link).attr('href').startsWith('#')
+                && link.classList.length === 0
+                && isExternalLink(link.href,
+                    config.site.url,
+                    config.site.external_link.exclude);
+        }).each((i, link) => {
+            link.relList.add('noopener');
+            link.target = '_blank';
+        });
+    }
+}
+
+function loadMathJax() { //加载mathjax
+    $.getScript("//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML", function () {
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$', '$'], ['\\(', '\\)']] } });
+        var math = document.getElementsByClassName("entry-content")[0];
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, math]);
+    });
+}
+
+$(document).ready(function () {
+    loadMainJs(jQuery, window.moment, window.ClipboardJS, window.IcarusThemeSettings);
+    /* 添加背景色 */
+    var navbar = $(".is-fixed-top");
+    var navbar1 = $(".justify-content-start");
+    if (navbar.offset().top > 12) {
+        navbar.addClass("navbar-highlight");
+        navbar1.addClass("navbar-highlight");
+    } else {
+        navbar.removeClass("navbar-highlight");
+        navbar1.removeClass("navbar-highlight");
+    }
+    $(window).scroll(function () {
+        if (navbar.offset().top > 12) {
+            navbar.addClass("navbar-highlight");
+            navbar1.addClass("navbar-highlight");
+        } else {
+            navbar.removeClass("navbar-highlight");
+            navbar1.removeClass("navbar-highlight");
+        }
+    });
+});

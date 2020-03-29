@@ -1,304 +1,97 @@
-<!DOCTYPE HTML>
-<html>
+const { Component } = require('inferno');
+const Head = require('./common/head');
+const Navbar = require('./common/navbar');
+const Widgets = require('./common/widgets');
+const Footer = require('./common/footer');
+const Scripts = require('./common/scripts');
+const Search = require('./common/search');
+const classname = require('./util/classname');
 
-<head>
-	<link rel="bookmark"  type="image/x-icon"  href="/img/logo_miccall.png"/>
-	<link rel="shortcut icon" href="/img/logo_miccall.png">
-	
-			    <title>
-    Oranges are Juicy
-    </title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="/css/mic_main.css" />
-    <link rel="stylesheet" href="/css/dropdownMenu.css" />
-    <meta name="keywords" content="miccall" />
-    
-    	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-	 
-    <noscript>
-        <link rel="stylesheet" href="/css/noscript.css" />
-    </noscript>
-    <style type="text/css">
-        body:before {
-          content: ' ';
-          position: fixed;
-          top: 0;
-          background: url('/img/bg.jpg') center 0 no-repeat;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          background-size: cover; 
+module.exports = class extends Component {
+    render() {
+        const { env, site, config, page, helper, body } = this.props;
+        const { my_cdn, url_for } = helper;
+        const { comment, use_pjax } = config;
+        // 默认不加载公式，文中头部开启mathJax:true才加载
+        var isMath = page.mathJax != undefined && page.mathJax;
+
+        // =====index hot_recommend
+        var hotRecommendStr =
+            "<div class=\"card widget\">" +
+            "   <div class=\"card-content\">" +
+            "       <h3 class=\"menu-label\">热门推荐</h3><span id=\"index_hot_div\">加载中，稍等几秒...</span>" +
+            "   </div>" +
+            "</div>";
+
+        var pjaxJs = `var pjax = new Pjax({
+            elements: "a",//代表点击链接就更新
+            selectors: [  //代表要更新的节点
+                ".section",
+                "title"
+            ],
+            cache: true
+        })
+
+        function loadBusuanzi(){
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js", function () {});
         }
-    </style>
 
-			    
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+        });
+        
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+            $(".section").css({opacity:1});
+            loadIssueData();
+            if(${isMath}){
+                loadMathJax();
+            }
+            loadMainJs(jQuery, window.moment, window.ClipboardJS, window.IcarusThemeSettings);
+            loadBackTop();
+            loadBusuanzi();
+        });`;
+
+        if (page.path != 'index.html'
+            || (comment.type == 'undefined'
+                || comment.type != 'gitalk'
+                || comment.has_hot_recommend == 'undefined'
+                || !comment.has_hot_recommend)) {
+            hotRecommendStr = '';
         }
-      });
-    </script>
+        // =====
 
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script async type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  
+        const language = page.lang || page.language || config.language;
+        const columnCount = Widgets.getColumnCount(config.widgets);
 
-
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/jquery.scrollex.min.js"></script>
-    <script src="/js/jquery.scrolly.min.js"></script>
-    <script src="/js/skel.min.js"></script>
-    <script src="/js/util.js"></script>
-    <script src="/js/main.js"></script>
-	
-<meta name="generator" content="Hexo 4.2.0"></head>
-    
-		
-<!-- Layouts -->
-
-
-
-<!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_coy.css" />
-<link rel="stylesheet" href="/css/typo.css" />
-<!-- 文章页 -->
-<body class="is-loading">
-    <!-- Wrapper 外包 s-->
-    <div id="wrapper" class="fade-in">
-        <!-- Intro 头部显示 s -->
-        <!-- Intro 头部显示 e -->
-        <!-- Header 头部logo start -->
-        <header id="header">
-    <a href="/" class="logo">OrangeBai</a>
-</header>
-        <!-- Nav 导航条 start -->
-        <nav id="nav" class="special" >
-            <ul class="menu links" >
-			<!-- Homepage  主页  --> 
-			<li >
-	            <a href="/" rel="nofollow">Home</a>
-	        </li>
-			<!-- categories_name  分类   --> 
-	        
-	        <li class="active">
-	            <a href="#s1">Categories</a>
-	                    <ul class="submenu">
-	                        <li>
-	                        <a class="category-link" href="/categories/Alogorithms/">Alogorithms</a></li><li><a class="category-link" href="/categories/Math/">Math</a>
-	                    </ul>
-	        </li>
-	        
-	        <!-- archives  归档   --> 
-	        
-	        
-		        <!-- Pages 自定义   -->
-		        
-		        <li>
-		            <a href="/about/" title="Resume">
-		                Resume
-		            </a>
-		        </li>
-		        
-		        <li>
-		            <a href="/gallery/" title="gallery">
-		                gallery
-		            </a>
-		        </li>
-		        
-		        <li>
-		            <a href="/tag/" title="tags">
-		                tags
-		            </a>
-		        </li>
-		        
-
-
-            </ul>
-            <!-- icons 图标   -->
-			<ul class="icons">
-                    
-                    <li>
-                        <a title="github" href="https://github.com/miccall" target="_blank" rel="noopener">
-                            <i class="icon fa fa-github"></i>
-                        </a>
-                    </li>
-                    
-                    <li>
-                        <a title="500px" href="http://500px.com" target="_blank" rel="noopener">
-                            <i class="icon fa fa-500px"></i>
-                        </a>
-                    </li>
-                    
-			</ul>
-</nav>
-
-        <div id="main" >
-            <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://images.unsplash.com/photo-1529480544878-4e2cc822c103?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2000&amp;q=80);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >Basic Sorts</h2></a>
-            </div>
-            <!-- Post -->
-            <div class="typo" style="padding: 3rem;">
-                <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a><strong>Intro</strong></h2><p>Sorting problems are the most basic problems one might encounter during coding. Here I would like to list the most basic sorting algorithms, with pseudocode and discussion. All the pics are extracted from <a href="https://github.com/CodeClub-JU/Introduction-to-Algorithms-CLRS/blob/master/Introduction%20to%20Algorithms%20-%203rd%20Edition.pdf" target="_blank" rel="noopener">Introduction to Algorithms</a> [1]. C ++ code and Python code will be published at my GitHub in the following days.</p>
-<h2 id="Backgroud"><a href="#Backgroud" class="headerlink" title="Backgroud"></a><strong>Backgroud</strong></h2><p>pic1 here</p>
-<p>A practical scenario for a sorting problem is soring a hand of cards as figure 1 illustrated. Intuitively, when a new card is dealt with you, you might wanna compare it with the other cards in your hand, if they are sorted, and find the most suitable position for it, which is exactly what an insertion sort is doing. However, thought it might be the most easy algorithm to understand, insertion algorithm lacks efficiency. With an average running time of $\Theta(n^2)$, it is slower than most of the sorting algorithms. The way we used for insertion sort is known as <strong>incremental approach</strong>, which lets the inputs come one by one and have them meet the requirements. </p>
-<p>Another algorithm design technique that widely applied in sorting problems and other problems is <strong>divide and conquer</strong>. It breaks down the problem into sub-problems recursively, until they can be solved directly. The solution to the sub-problems is then combined to give a solution to the origin problem. Quicksort, which is the built-in sort function in most languages and considered as the fastest sorting algorithm, is an example of that.</p>
-<h4 id="Loop-invariants"><a href="#Loop-invariants" class="headerlink" title="Loop invariants"></a>Loop invariants</h4><p>Before start, we would like to introduce the concept of <strong>Loop invariants</strong>. Similar to mathematical induction, if a loop algorithms has the following properties:</p>
-<ol>
-<li><strong>Initializatin</strong>: It is true prior to the first iteration of the loop.</li>
-<li><strong>Maintenance</strong>: If it is true before an iteration of loop, it remains true before next iteration.</li>
-<li><strong>Termination</strong>: When the loop terminates, the invariant gives us a useful property that helps show that the algorithm is correct.</li>
-</ol>
-<p>It is similar to mathematical induction in some sense.</p>
-<h2 id="Algorithms"><a href="#Algorithms" class="headerlink" title="Algorithms"></a><strong>Algorithms</strong></h2><h3 id="Insertion-sort"><a href="#Insertion-sort" class="headerlink" title="Insertion sort"></a><strong>Insertion sort</strong></h3><p>Insertion sort is one of the easiest algorithms to understand. It iters from one side of the array to the other side and find a suitable position for the new added value. Just like when a new card is dealt in a card game, if all the other cards are sorted, the player can start from one side and compare it with the new one until a suitable position is found.</p>
-<h4 id="illustration-and-pseudocode"><a href="#illustration-and-pseudocode" class="headerlink" title="illustration and pseudocode"></a>illustration and pseudocode</h4><p>pic2 here<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Insertion-Sort(A)</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Sort elemetns in A</span></span><br><span class="line"><span class="comment"> * @param A A list of numbers(chars, etc.)</span></span><br><span class="line"><span class="comment"> * @return Sorted list</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">for</span> j = <span class="number">2</span> to A.length</span><br><span class="line">    key = A[j]                  <span class="comment">// Current element</span></span><br><span class="line">    i = j - <span class="number">1</span>                   <span class="comment">// flag</span></span><br><span class="line">    <span class="keyword">while</span> i &gt; <span class="number">0</span> <span class="keyword">and</span> A[i] &gt; key  </span><br><span class="line">    <span class="comment">// from the right side, if flag is greater than current</span></span><br><span class="line">        A[i+<span class="number">1</span>]=A[i]             <span class="comment">// Move A[i] rightwise</span></span><br><span class="line">        i = i<span class="number">-1</span>                 <span class="comment">// Set new flag</span></span><br><span class="line">        A[i+<span class="number">1</span>] = key            <span class="comment">// Insert A[j] at previous position</span></span><br><span class="line"><span class="keyword">return</span> A</span><br></pre></td></tr></table></figure></p>
-<h4 id="Discription-and-Correctness"><a href="#Discription-and-Correctness" class="headerlink" title="Discription and Correctness"></a>Discription and Correctness</h4><ol>
-<li><strong>Initializatin</strong>: At the very begining of the sort when $j = 2$, $A[1,…,j-1]$ only contains one element and can be regarded as sorted array.</li>
-<li><strong>Matintenance</strong>: It can be asuumed that at the begining of each loop, $A[1,…,j-1]$ is sorted. During the loop, $A[j]$ is compared with $A[j-1], A[j-2]…A[1]$ one by one until find its suitable position. The loop invariants here is, for each interation, $A[1,…,j]$ consist of the elements originally in $A[1,…,j-1]$, but in sorted order.</li>
-<li><strong>Termination</strong>: WHen the loop terminates, $j&gt;A.length=n$. Substituing $n+1$ for $j$(Note that referring $j+1$ is just for convenience of describing the process, $A[j+1]$ does not exist), and $A[1,…,n]$ consits of the elements originally in $A[1,…n]$, but in sorted order.</li>
-</ol>
-<h4 id="Performance-Analysis"><a href="#Performance-Analysis" class="headerlink" title="Performance Analysis"></a>Performance Analysis</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Insertion-Sort(A)</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * sort array A</span></span><br><span class="line"><span class="comment"> * @param A A list of numbers(chars, etc.)</span></span><br><span class="line"><span class="comment"> * @return None</span></span><br><span class="line"><span class="comment"> */</span>                             <span class="comment">//cost  times</span></span><br><span class="line"><span class="keyword">for</span> j = <span class="number">2</span> to A.length           <span class="comment">// c1   n</span></span><br><span class="line">    key = A[j]                  <span class="comment">// c2   n - 1</span></span><br><span class="line">    i = j - <span class="number">1</span>                   <span class="comment">// c3   n-1</span></span><br><span class="line">    <span class="keyword">while</span> i &gt; <span class="number">0</span> <span class="keyword">and</span> A[i] &gt; key  <span class="comment">// c4   n^2</span></span><br><span class="line">        A[i+<span class="number">1</span>]=A[i]             <span class="comment">// c4   n^2</span></span><br><span class="line">        i = i<span class="number">-1</span>                 <span class="comment">// c5   n^2</span></span><br><span class="line">    A[i+<span class="number">1</span>] = key                <span class="comment">// c6   n-1</span></span><br></pre></td></tr></table></figure>
-<script type="math/tex; mode=display">
-\begin{aligned}
-T(n) &= c_1n+c_2(n-1)+c_3(n-1)+c_5\sum_{j=2}^{n}t_{j}+c_6\sum_{j=2}^{n}(t_{j}-1)+c_{7}\sum_{j=2}^{n}(t_{j}-1) + c_{8}(n-1).\\
-&= c_1n+c_2(n-1)+c_3(n-1)+c_5 n^{2}+c_6n^{2}+c_{7}n^{2} + c_{8}(n-1).\\
-&= \Theta(n^2)
-\end{aligned}</script><p>In the equation above, $t_j$ represent the number of interations when a suitable position for $j$th element is found. Therefore, $t_j \in [1, … , j-1]$ with an average case of $\frac{j-1}{2}$.</p>
-<h3 id="Quicksort"><a href="#Quicksort" class="headerlink" title="Quicksort"></a><strong>Quicksort</strong></h3><p>Quicksort applies the divide-and-conquer paradigm.</p>
-<ol>
-<li><strong>Divide</strong>: Partition (rearrange) the array $A[p,…,r]$ into two (possibly empty) subarrays $A[p,…,q-1]$ and $A[q+1,…,r]$. Each element of $A[p,…q-1]$ is less than or equal to $A[q]$ while each element of $A[q+1,…,r]$ is greater than or equal to $A[q]$.</li>
-<li><strong>Conquer</strong>: Sort the two subarrays $A[p,…,q-1]$ and $A[q+1,…,r]$ by recursively calling quicksort.</li>
-</ol>
-<h4 id="illustration-and-pseudocode-1"><a href="#illustration-and-pseudocode-1" class="headerlink" title="illustration and pseudocode"></a>illustration and pseudocode</h4><p>pic4 here<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">quickSort(A, p, r)</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * sort A[p, r] in array A</span></span><br><span class="line"><span class="comment"> * @param A A list of numbers(chars, etc.)</span></span><br><span class="line"><span class="comment"> * @param p index of first element</span></span><br><span class="line"><span class="comment"> * @param r index of the last element</span></span><br><span class="line"><span class="comment"> * @return None</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">if</span> p &lt; r</span><br><span class="line">    q = partition(A,p,r)</span><br><span class="line">    quickSort(A, p, q<span class="number">-1</span>)</span><br><span class="line">    quickSort(A, q+<span class="number">1</span>, r)</span><br></pre></td></tr></table></figure><br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">partition(A, p, r)</span><br><span class="line"><span class="comment">/** set A[r] as pivot element, rearrange the array so that elements </span></span><br><span class="line"><span class="comment">*   less than A[r] are placed at its left side, while elements greater </span></span><br><span class="line"><span class="comment">*   than A[r] at right side.</span></span><br><span class="line"><span class="comment">* @param A A list of numbers(char, ets.)</span></span><br><span class="line"><span class="comment">* @param p index of first element</span></span><br><span class="line"><span class="comment">* @param r index of last element</span></span><br><span class="line"><span class="comment">* @return index of pivot after rearrangement</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line">x = A[r]                        <span class="comment">// set pivot</span></span><br><span class="line">i = p - <span class="number">1</span>                       <span class="comment">// set pivot index - 1</span></span><br><span class="line"><span class="keyword">for</span> j = p to r - <span class="number">1</span>              <span class="comment">// iteration all elements</span></span><br><span class="line">    <span class="keyword">if</span> A[j] &lt;= x                <span class="comment">// if current is less than pivot</span></span><br><span class="line">        i = i + <span class="number">1</span>               <span class="comment">// pivot index + 1</span></span><br><span class="line">        exchange A[i] with A[j] <span class="comment">// put the greater number at left side of pivot</span></span><br><span class="line">exchange A[i+<span class="number">1</span>] with A[r]       <span class="comment">// put the pivot at its index</span></span><br><span class="line"><span class="keyword">return</span> i + <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
-<h4 id="Discription-and-Correctness-1"><a href="#Discription-and-Correctness-1" class="headerlink" title="Discription and Correctness"></a>Discription and Correctness</h4><p>Quicksort is a divide and conquer algorithm. The partition function selects an element $x=A[r]$ as a pivot and rearrange the array so that elements less than $x$ are placed at its left side, while elements greater than $x$ are placed at the right side. The partion process is also a incremental approach, of which correctness can be proved if it has the loop inviants. During each loop, value in $A[i+1,…,j-1]$ are all greater than $x$ while A[p, …, i] are all less than $x$.<br>Pic5 here</p>
-<ol>
-<li><strong>Initialization</strong>: Prior to the first iteration of the loop, $i=p-1$ and $j=p$. Since there are no values between $p$ and $i$ and no values lie between $i+1$ and $j-1$, the condition are satisfied.</li>
-<li><strong>Maintenance</strong>: Since $i$ only increment when condition are satisfied while $j$ imcrement at each interation, $i$ is always less than $j$. At each loop, if $A[j]$ is greater than $x$, the only action during the loop is to increment $j$. Since $j &gt; i$ and $A[j] &gt; x$, condition satisfied. If $A[j]$ is less or equal to $x$, increment $i$ and $j$ by 1 and exchange $A[i]$ and $A[j]$. Since $A[p,…i-1] &lt; x$ and $A[i]_{new}=A[j] &lt;= x$, the loop invariants can be maintaine. On the other hand, $A[i+1,…j-1] &lt; x$ and $A[j]_{new} = A[(i-1)+1]_{old} &gt; x$, loop invariants maintained.</li>
-<li><strong>Termination</strong>: At termination where $j=r$, we have, $A[p,…i] &lt;= x$ and $A[i+1, r-1] &gt; x$. By exchange $A[i+1]$ and $A[r]$, we have $A[p,…i] &lt; x$, $ A[i+1] = x$ and $A[i+1, r]&gt; x$. Therefore, the partition function return the index of pivot, and all the elements leftwise are less or equal than the pivot, while all the elements rightwise are greater than the pivot.</li>
-</ol>
-<p>A quicksort of array $A$ first put the pivot at the right place and return its index, after that, it divide the array into $A[r,…i-1]$ and $A[i+1,…,p]$ and sort it seperately. Assuming the quicksort algorithm is correct, each sub-problem can be solved. If each value in $A[r,…i-1]$ less than or equal to $A[i]$, each value in $A[i+1,…,p]$ greater than $A[i]$, and the two array are sorted, the array $A[r,…,q]$ is sorted.</p>
-<h4 id="Performance"><a href="#Performance" class="headerlink" title="Performance"></a>Performance</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">partition(A, p, r)              <span class="comment">// cost times</span></span><br><span class="line">x = A[r]                        <span class="comment">// c1   1</span></span><br><span class="line">i = p - <span class="number">1</span>                       <span class="comment">// c2   1</span></span><br><span class="line"><span class="keyword">for</span> j = p to r - <span class="number">1</span>              <span class="comment">// c3   r-1-p</span></span><br><span class="line">    <span class="keyword">if</span> A[j] &lt;= x                <span class="comment">// c4   r-1-p</span></span><br><span class="line">        i = i + <span class="number">1</span>               <span class="comment">// c5   t5</span></span><br><span class="line">        exchange A[i] with A[j] <span class="comment">// c6   t6</span></span><br><span class="line">exchange A[i+<span class="number">1</span>] with A[r]       <span class="comment">// c7   1</span></span><br><span class="line"><span class="keyword">return</span> i + <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>Review the pseudocode of partition, we might find that $t_{5}=t_{6} \in [0,…,r-1-p]$, since those two lines are only performed when $A[j]&lt;=x$. The time complexity can therefore be represented as:</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-T(n) &= c_{1} + c_{2} + c_3(r-1-p) + c_{4}(r-1-p) + c_{5}t_{5}+c_{6}t_{6} + c_{7}\\
-     &= k(r-p-1)\\
-     &=\Theta(n)
-\end{aligned}</script><p>Photo by Aditya Chinchure on Unsplash</p>
-
-            </div>
-
-            <!-- Post Comments -->
-            
-    <!-- 使用 DISQUS_CLICK -->
-<div id="disqus-comment">
-    <div id="disqus_thread"></div>
-
-<!-- add animation -->
-<style>
-	.disqus_click_btn {
-            line-height: 30px;
-            margin: 0;
-            min-width: 50px;
-            padding: 0 14px;
-            display: inline-block;
-            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-            font-size: 14px;
-            font-weight: 400;
-            text-transform: uppercase;
-            letter-spacing: 0;
-            overflow: hidden;
-            will-change: box-shadow;
-            transition: box-shadow .2s cubic-bezier(.4, 0, 1, 1), background-color .2s cubic-bezier(.4, 0, .2, 1), color .2s cubic-bezier(.4, 0, .2, 1);
-            outline: 0;
-            cursor: pointer;
-            text-decoration: none;
-            text-align: center;
-            vertical-align: middle;
-            border: 0;
-            background: rgba(158, 158, 158, .2);
-            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
-            color: #fff;
-            background-color: #7EC0EE;
-            text-shadow: 0
-        }
-</style>
-	
-<div class="btn_click_load" id="disqus_bt"> 
-    <button class="disqus_click_btn">点击查看评论</button>
-</div>
-
-<!--
-<script type="text/javascript">
-$('.btn_click_load').click(function() {
-    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-    var disqus_shortname = 'http-miccall-tech'; // required: replace example with your forum shortname
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-
-    document.getElementById('disqus_bt').style.display = "none";
-});
-</script>
--->
-<script type="text/javascript">
-    var disqus_config = function () {
-        this.page.url = 'http://yoursite.com/2020/03/24/sort-alogorithms/';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'http://yoursite.com/2020/03/24/sort-alogorithms/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-    };
-</script>
-
-<script type="text/javascript">
-    $('.btn_click_load').click(function() {  //click to load comments
-        (function() { // DON'T EDIT BELOW THIS LINE
-            var d = document;
-            var s = d.createElement('script');
-            s.src = '//http-miccall-tech.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', + new Date());
-            (d.head || d.body).appendChild(s);
-        })();
-        $('.btn_click_load').css('display','none');
-    });
-</script>
-</div>
-<style>
-    #disqus-comment{
-        background-color: #eee;
-        padding: 2pc;
+        return <html lang={language ? language.substr(0, 2) : ''}>
+            <Head env={env} site={site} config={config} helper={helper} page={page} />
+            <body class={`is-${columnCount}-column has-navbar-fixed-top`}>
+                <Navbar config={config} helper={helper} page={page} />
+                <script type="text/javascript" src={my_cdn(url_for('/js/theme-setting.js'))}></script>
+                <section class="section">
+                    <div class="container">
+                        <div class="columns">
+                            <div class={classname({
+                                column: true,
+                                'order-2': true,
+                                'column-main': true,
+                                'is-12': columnCount === 1,
+                                'is-8-tablet is-8-desktop is-8-widescreen': columnCount === 2,
+                                'is-8-tablet is-8-desktop is-6-widescreen': (page.layout != 'post' && page.layout != 'page') && columnCount === 3,
+                                'is-8-tablet is-8-desktop is-9-widescreen': page.layout == 'page' || page.layout == 'post'
+                            })} dangerouslySetInnerHTML={{ __html: hotRecommendStr + body }}></div>
+                            <Widgets site={site} config={config} helper={helper} page={page} position={'left'} />
+                            {page.layout == 'page' || page.layout == 'post' ? null : <Widgets site={site} config={config} helper={helper} page={page} position={'right'} />}
+                        </div>
+                    </div>
+                </section>
+                <Footer config={config} helper={helper} />
+                <Scripts site={site} config={config} helper={helper} page={page} />
+                <Search config={config} helper={helper} />
+                {use_pjax ? <script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.js"></script> : null}
+                {use_pjax ? <script type="text/javascript" dangerouslySetInnerHTML={{ __html: pjaxJs }}></script> : null}
+            </body>
+        </html>;
     }
-</style>
-
-
-        </div>
-        <!-- Copyright 版权 start -->
-                <div id="copyright">
-            <ul>
-                <li>&copy;Powered By <a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener" style="border-bottom: none;">hexo</a></li>
-                <li>Design: <a href="http://miccall.tech " target="_blank" rel="noopener" style="border-bottom: none;">miccall</a></li>
-            </ul>
-            
-                <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
-			
-        </div>
-    </div>
-</body>
-
-
-
- 	
-</html>
+};
