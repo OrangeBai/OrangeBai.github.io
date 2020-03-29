@@ -1,97 +1,734 @@
-const { Component } = require('inferno');
-const Head = require('./common/head');
-const Navbar = require('./common/navbar');
-const Widgets = require('./common/widgets');
-const Footer = require('./common/footer');
-const Scripts = require('./common/scripts');
-const Search = require('./common/search');
-const classname = require('./util/classname');
+<!DOCTYPE html>
 
-module.exports = class extends Component {
-    render() {
-        const { env, site, config, page, helper, body } = this.props;
-        const { my_cdn, url_for } = helper;
-        const { comment, use_pjax } = config;
-        // 默认不加载公式，文中头部开启mathJax:true才加载
-        var isMath = page.mathJax != undefined && page.mathJax;
 
-        // =====index hot_recommend
-        var hotRecommendStr =
-            "<div class=\"card widget\">" +
-            "   <div class=\"card-content\">" +
-            "       <h3 class=\"menu-label\">热门推荐</h3><span id=\"index_hot_div\">加载中，稍等几秒...</span>" +
-            "   </div>" +
-            "</div>";
+<html lang="en" >
 
-        var pjaxJs = `var pjax = new Pjax({
-            elements: "a",//代表点击链接就更新
-            selectors: [  //代表要更新的节点
-                ".section",
-                "title"
-            ],
-            cache: true
-        })
 
-        function loadBusuanzi(){
-        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js", function () {});
-        }
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+     Oranges are Juicy
+  </title>
+  <meta name="generator" content="hexo-theme-yilia-plus">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
 
-        // 开始 PJAX 执行的函数
-        document.addEventListener('pjax:send', function () {
-        });
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content on">
+      
+<section class="cover">
+    
+      
+      <a class="forkMe" href="https://github.com/Shen-Yu/hexo-theme-ayer"
+        target="_blank"><img width="149" height="149" src="/images/forkme.png"
+          class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+    
+  <div class="cover-frame">
+    <div class="bg-box">
+      <img src="/images/cover1.jpg" alt="image frame" />
+    </div>
+    <div class="cover-inner text-center text-white">
+      <h1><a href="/">Oranges are Juicy</a></h1>
+      <div id="subtitle-box">
         
-        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
-        document.addEventListener('pjax:complete', function () {
-            $(".section").css({opacity:1});
-            loadIssueData();
-            if(${isMath}){
-                loadMathJax();
-            }
-            loadMainJs(jQuery, window.moment, window.ClipboardJS, window.IcarusThemeSettings);
-            loadBackTop();
-            loadBusuanzi();
-        });`;
+        <span id="subtitle"></span>
+        
+      </div>
+      <div>
+        
+      </div>
+    </div>
+  </div>
+  <div class="cover-learn-more">
+    <a href="javascript:void(0)" class="anchor"><i class="ri-arrow-down-line"></i></a>
+  </div>
+</section>
 
-        if (page.path != 'index.html'
-            || (comment.type == 'undefined'
-                || comment.type != 'gitalk'
-                || comment.has_hot_recommend == 'undefined'
-                || !comment.has_hot_recommend)) {
-            hotRecommendStr = '';
-        }
-        // =====
 
-        const language = page.lang || page.language || config.language;
-        const columnCount = Widgets.getColumnCount(config.widgets);
 
-        return <html lang={language ? language.substr(0, 2) : ''}>
-            <Head env={env} site={site} config={config} helper={helper} page={page} />
-            <body class={`is-${columnCount}-column has-navbar-fixed-top`}>
-                <Navbar config={config} helper={helper} page={page} />
-                <script type="text/javascript" src={my_cdn(url_for('/js/theme-setting.js'))}></script>
-                <section class="section">
-                    <div class="container">
-                        <div class="columns">
-                            <div class={classname({
-                                column: true,
-                                'order-2': true,
-                                'column-main': true,
-                                'is-12': columnCount === 1,
-                                'is-8-tablet is-8-desktop is-8-widescreen': columnCount === 2,
-                                'is-8-tablet is-8-desktop is-6-widescreen': (page.layout != 'post' && page.layout != 'page') && columnCount === 3,
-                                'is-8-tablet is-8-desktop is-9-widescreen': page.layout == 'page' || page.layout == 'post'
-                            })} dangerouslySetInnerHTML={{ __html: hotRecommendStr + body }}></div>
-                            <Widgets site={site} config={config} helper={helper} page={page} position={'left'} />
-                            {page.layout == 'page' || page.layout == 'post' ? null : <Widgets site={site} config={config} helper={helper} page={page} position={'right'} />}
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js"></script>
+
+<div id="main">
+  <section class="outer">
+  <article class="articles">
+    
+    
+    
+    
+    <article id="post-sort-alogorithms" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/03/24/sort-alogorithms/"
+    >Basic Sorts</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/03/24/sort-alogorithms/" class="article-date">
+  <time datetime="2020-03-24T02:39:19.000Z" itemprop="datePublished">2020-03-24</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Alogorithms/">Alogorithms</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a><strong>Intro</strong></h2><p>Sorting problems are the most basic problems one might encounter during coding. Here I would like to list the most basic sorting algorithms, with pseudocode and discussion. All the pics are extracted from <a href="https://github.com/CodeClub-JU/Introduction-to-Algorithms-CLRS/blob/master/Introduction%20to%20Algorithms%20-%203rd%20Edition.pdf" target="_blank" rel="noopener">Introduction to Algorithms</a> [1]. C ++ code and Python code will be published at my GitHub in the following days.</p>
+<h2 id="Backgroud"><a href="#Backgroud" class="headerlink" title="Backgroud"></a><strong>Backgroud</strong></h2><p>pic1 here</p>
+<p>A practical scenario for a sorting problem is soring a hand of cards as figure 1 illustrated. Intuitively, when a new card is dealt with you, you might wanna compare it with the other cards in your hand, if they are sorted, and find the most suitable position for it, which is exactly what an insertion sort is doing. However, thought it might be the most easy algorithm to understand, insertion algorithm lacks efficiency. With an average running time of $\Theta(n^2)$, it is slower than most of the sorting algorithms. The way we used for insertion sort is known as <strong>incremental approach</strong>, which lets the inputs come one by one and have them meet the requirements. </p>
+<p>Another algorithm design technique that widely applied in sorting problems and other problems is <strong>divide and conquer</strong>. It breaks down the problem into sub-problems recursively, until they can be solved directly. The solution to the sub-problems is then combined to give a solution to the origin problem. Quicksort, which is the built-in sort function in most languages and considered as the fastest sorting algorithm, is an example of that.</p>
+<h4 id="Loop-invariants"><a href="#Loop-invariants" class="headerlink" title="Loop invariants"></a>Loop invariants</h4><p>Before start, we would like to introduce the concept of <strong>Loop invariants</strong>. Similar to mathematical induction, if a loop algorithms has the following properties:</p>
+<ol>
+<li><strong>Initializatin</strong>: It is true prior to the first iteration of the loop.</li>
+<li><strong>Maintenance</strong>: If it is true before an iteration of loop, it remains true before next iteration.</li>
+<li><strong>Termination</strong>: When the loop terminates, the invariant gives us a useful property that helps show that the algorithm is correct.</li>
+</ol>
+<p>It is similar to mathematical induction in some sense.</p>
+<h2 id="Algorithms"><a href="#Algorithms" class="headerlink" title="Algorithms"></a><strong>Algorithms</strong></h2><h3 id="Insertion-sort"><a href="#Insertion-sort" class="headerlink" title="Insertion sort"></a><strong>Insertion sort</strong></h3><p>Insertion sort is one of the easiest algorithms to understand. It iters from one side of the array to the other side and find a suitable position for the new added value. Just like when a new card is dealt in a card game, if all the other cards are sorted, the player can start from one side and compare it with the new one until a suitable position is found.</p>
+<h4 id="illustration-and-pseudocode"><a href="#illustration-and-pseudocode" class="headerlink" title="illustration and pseudocode"></a>illustration and pseudocode</h4><p>pic2 here<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Insertion-Sort(A)</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Sort elemetns in A</span></span><br><span class="line"><span class="comment"> * @param A A list of numbers(chars, etc.)</span></span><br><span class="line"><span class="comment"> * @return Sorted list</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">for</span> j = <span class="number">2</span> to A.length</span><br><span class="line">    key = A[j]                  <span class="comment">// Current element</span></span><br><span class="line">    i = j - <span class="number">1</span>                   <span class="comment">// flag</span></span><br><span class="line">    <span class="keyword">while</span> i &gt; <span class="number">0</span> <span class="keyword">and</span> A[i] &gt; key  </span><br><span class="line">    <span class="comment">// from the right side, if flag is greater than current</span></span><br><span class="line">        A[i+<span class="number">1</span>]=A[i]             <span class="comment">// Move A[i] rightwise</span></span><br><span class="line">        i = i<span class="number">-1</span>                 <span class="comment">// Set new flag</span></span><br><span class="line">        A[i+<span class="number">1</span>] = key            <span class="comment">// Insert A[j] at previous position</span></span><br><span class="line"><span class="keyword">return</span> A</span><br></pre></td></tr></table></figure></p>
+<h4 id="Discription-and-Correctness"><a href="#Discription-and-Correctness" class="headerlink" title="Discription and Correctness"></a>Discription and Correctness</h4><ol>
+<li><strong>Initializatin</strong>: At the very begining of the sort when $j = 2$, $A[1,…,j-1]$ only contains one element and can be regarded as sorted array.</li>
+<li><strong>Matintenance</strong>: It can be asuumed that at the begining of each loop, $A[1,…,j-1]$ is sorted. During the loop, $A[j]$ is compared with $A[j-1], A[j-2]…A[1]$ one by one until find its suitable position. The loop invariants here is, for each interation, $A[1,…,j]$ consist of the elements originally in $A[1,…,j-1]$, but in sorted order.</li>
+<li><strong>Termination</strong>: WHen the loop terminates, $j&gt;A.length=n$. Substituing $n+1$ for $j$(Note that referring $j+1$ is just for convenience of describing the process, $A[j+1]$ does not exist), and $A[1,…,n]$ consits of the elements originally in $A[1,…n]$, but in sorted order.</li>
+</ol>
+<h4 id="Performance-Analysis"><a href="#Performance-Analysis" class="headerlink" title="Performance Analysis"></a>Performance Analysis</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Insertion-Sort(A)</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * sort array A</span></span><br><span class="line"><span class="comment"> * @param A A list of numbers(chars, etc.)</span></span><br><span class="line"><span class="comment"> * @return None</span></span><br><span class="line"><span class="comment"> */</span>                             <span class="comment">//cost  times</span></span><br><span class="line"><span class="keyword">for</span> j = <span class="number">2</span> to A.length           <span class="comment">// c1   n</span></span><br><span class="line">    key = A[j]                  <span class="comment">// c2   n - 1</span></span><br><span class="line">    i = j - <span class="number">1</span>                   <span class="comment">// c3   n-1</span></span><br><span class="line">    <span class="keyword">while</span> i &gt; <span class="number">0</span> <span class="keyword">and</span> A[i] &gt; key  <span class="comment">// c4   n^2</span></span><br><span class="line">        A[i+<span class="number">1</span>]=A[i]             <span class="comment">// c4   n^2</span></span><br><span class="line">        i = i<span class="number">-1</span>                 <span class="comment">// c5   n^2</span></span><br><span class="line">    A[i+<span class="number">1</span>] = key                <span class="comment">// c6   n-1</span></span><br></pre></td></tr></table></figure>
+<script type="math/tex; mode=display">
+\begin{aligned}
+T(n) &= c_1n+c_2(n-1)+c_3(n-1)+c_5\sum_{j=2}^{n}t_{j}+c_6\sum_{j=2}^{n}(t_{j}-1)+c_{7}\sum_{j=2}^{n}(t_{j}-1) + c_{8}(n-1).\\
+&= c_1n+c_2(n-1)+c_3(n-1)+c_5 n^{2}+c_6n^{2}+c_{7}n^{2} + c_{8}(n-1).\\
+&= \Theta(n^2)
+\end{aligned}</script><p>In the equation above, $t_j$ represent the number of interations when a suitable position for $j$th element is found. Therefore, $t_j \in [1, … , j-1]$ with an average case of $\frac{j-1}{2}$.</p>
+<h3 id="Quicksort"><a href="#Quicksort" class="headerlink" title="Quicksort"></a><strong>Quicksort</strong></h3><p>Quicksort applies the divide-and-conquer paradigm.</p>
+<ol>
+<li><strong>Divide</strong>: Partition (rearrange) the array $A[p,…,r]$ into two (possibly empty) subarrays $A[p,…,q-1]$ and $A[q+1,…,r]$. Each element of $A[p,…q-1]$ is less than or equal to $A[q]$ while each element of $A[q+1,…,r]$ is greater than or equal to $A[q]$.</li>
+<li><strong>Conquer</strong>: Sort the two subarrays $A[p,…,q-1]$ and $A[q+1,…,r]$ by recursively calling quicksort.</li>
+</ol>
+<h4 id="illustration-and-pseudocode-1"><a href="#illustration-and-pseudocode-1" class="headerlink" title="illustration and pseudocode"></a>illustration and pseudocode</h4><p>pic4 here<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">quickSort(A, p, r)</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * sort A[p, r] in array A</span></span><br><span class="line"><span class="comment"> * @param A A list of numbers(chars, etc.)</span></span><br><span class="line"><span class="comment"> * @param p index of first element</span></span><br><span class="line"><span class="comment"> * @param r index of the last element</span></span><br><span class="line"><span class="comment"> * @return None</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">if</span> p &lt; r</span><br><span class="line">    q = partition(A,p,r)</span><br><span class="line">    quickSort(A, p, q<span class="number">-1</span>)</span><br><span class="line">    quickSort(A, q+<span class="number">1</span>, r)</span><br></pre></td></tr></table></figure><br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">partition(A, p, r)</span><br><span class="line"><span class="comment">/** set A[r] as pivot element, rearrange the array so that elements </span></span><br><span class="line"><span class="comment">*   less than A[r] are placed at its left side, while elements greater </span></span><br><span class="line"><span class="comment">*   than A[r] at right side.</span></span><br><span class="line"><span class="comment">* @param A A list of numbers(char, ets.)</span></span><br><span class="line"><span class="comment">* @param p index of first element</span></span><br><span class="line"><span class="comment">* @param r index of last element</span></span><br><span class="line"><span class="comment">* @return index of pivot after rearrangement</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line">x = A[r]                        <span class="comment">// set pivot</span></span><br><span class="line">i = p - <span class="number">1</span>                       <span class="comment">// set pivot index - 1</span></span><br><span class="line"><span class="keyword">for</span> j = p to r - <span class="number">1</span>              <span class="comment">// iteration all elements</span></span><br><span class="line">    <span class="keyword">if</span> A[j] &lt;= x                <span class="comment">// if current is less than pivot</span></span><br><span class="line">        i = i + <span class="number">1</span>               <span class="comment">// pivot index + 1</span></span><br><span class="line">        exchange A[i] with A[j] <span class="comment">// put the greater number at left side of pivot</span></span><br><span class="line">exchange A[i+<span class="number">1</span>] with A[r]       <span class="comment">// put the pivot at its index</span></span><br><span class="line"><span class="keyword">return</span> i + <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="Discription-and-Correctness-1"><a href="#Discription-and-Correctness-1" class="headerlink" title="Discription and Correctness"></a>Discription and Correctness</h4><p>Quicksort is a divide and conquer algorithm. The partition function selects an element $x=A[r]$ as a pivot and rearrange the array so that elements less than $x$ are placed at its left side, while elements greater than $x$ are placed at the right side. The partion process is also a incremental approach, of which correctness can be proved if it has the loop inviants. During each loop, value in $A[i+1,…,j-1]$ are all greater than $x$ while A[p, …, i] are all less than $x$.<br>Pic5 here</p>
+<ol>
+<li><strong>Initialization</strong>: Prior to the first iteration of the loop, $i=p-1$ and $j=p$. Since there are no values between $p$ and $i$ and no values lie between $i+1$ and $j-1$, the condition are satisfied.</li>
+<li><strong>Maintenance</strong>: Since $i$ only increment when condition are satisfied while $j$ imcrement at each interation, $i$ is always less than $j$. At each loop, if $A[j]$ is greater than $x$, the only action during the loop is to increment $j$. Since $j &gt; i$ and $A[j] &gt; x$, condition satisfied. If $A[j]$ is less or equal to $x$, increment $i$ and $j$ by 1 and exchange $A[i]$ and $A[j]$. Since $A[p,…i-1] &lt; x$ and $A[i]_{new}=A[j] &lt;= x$, the loop invariants can be maintaine. On the other hand, $A[i+1,…j-1] &lt; x$ and $A[j]_{new} = A[(i-1)+1]_{old} &gt; x$, loop invariants maintained.</li>
+<li><strong>Termination</strong>: At termination where $j=r$, we have, $A[p,…i] &lt;= x$ and $A[i+1, r-1] &gt; x$. By exchange $A[i+1]$ and $A[r]$, we have $A[p,…i] &lt; x$, $ A[i+1] = x$ and $A[i+1, r]&gt; x$. Therefore, the partition function return the index of pivot, and all the elements leftwise are less or equal than the pivot, while all the elements rightwise are greater than the pivot.</li>
+</ol>
+<p>A quicksort of array $A$ first put the pivot at the right place and return its index, after that, it divide the array into $A[r,…i-1]$ and $A[i+1,…,p]$ and sort it seperately. Assuming the quicksort algorithm is correct, each sub-problem can be solved. If each value in $A[r,…i-1]$ less than or equal to $A[i]$, each value in $A[i+1,…,p]$ greater than $A[i]$, and the two array are sorted, the array $A[r,…,q]$ is sorted.</p>
+<h4 id="Performance"><a href="#Performance" class="headerlink" title="Performance"></a>Performance</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">partition(A, p, r)              <span class="comment">// cost times</span></span><br><span class="line">x = A[r]                        <span class="comment">// c1   1</span></span><br><span class="line">i = p - <span class="number">1</span>                       <span class="comment">// c2   1</span></span><br><span class="line"><span class="keyword">for</span> j = p to r - <span class="number">1</span>              <span class="comment">// c3   r-1-p</span></span><br><span class="line">    <span class="keyword">if</span> A[j] &lt;= x                <span class="comment">// c4   r-1-p</span></span><br><span class="line">        i = i + <span class="number">1</span>               <span class="comment">// c5   t5</span></span><br><span class="line">        exchange A[i] with A[j] <span class="comment">// c6   t6</span></span><br><span class="line">exchange A[i+<span class="number">1</span>] with A[r]       <span class="comment">// c7   1</span></span><br><span class="line"><span class="keyword">return</span> i + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>Review the pseudocode of partition, we might find that $t_{5}=t_{6} \in [0,…,r-1-p]$, since those two lines are only performed when $A[j]&lt;=x$. The time complexity can therefore be represented as:</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+T(n) &= c_{1} + c_{2} + c_3(r-1-p) + c_{4}(r-1-p) + c_{5}t_{5}+c_{6}t_{6} + c_{7}\\
+     &= k(r-p-1)\\
+     &=\Theta(n)
+\end{aligned}</script><p>Photo by Aditya Chinchure on Unsplash</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ComputerScience-Alogorithms/" rel="tag">ComputerScience - Alogorithms</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-hello-world" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/03/23/hello-world/"
+    >Hello World</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/03/23/hello-world/" class="article-date">
+  <time datetime="2020-03-23T20:04:45.510Z" itemprop="datePublished">2020-03-23</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-stochastic-gradient-descent" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2019/07/13/stochastic-gradient-descent/"
+    >Stochastic Gradient Descent</a> 
+</h2>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2019/07/13/stochastic-gradient-descent/" class="article-date">
+  <time datetime="2019-07-13T01:39:19.000Z" itemprop="datePublished">2019-07-13</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Math/">Math</a>
+  </div>
+
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a><strong>Intro</strong></h2><p>Well, if you look through top journals for machine learning fields in these days, you might notice that more than half of published papers are regarding deep neural networks. This trend, I mean, the popularity of DL is just like that of SVM a decade ago. To better understand the  core ideas of different models, we should focus on details such as model structure, training method, and mathmematical proofs. In this series, I am trying to introduce some basic concepts related to artificial intellegence, esciplly deep learning. To begin with, this post discuss one of the most important and the basic algorithms: Stochastic Gradient Descent, abbreviated SGD.</p>
+<h2 id="Basic-Properties"><a href="#Basic-Properties" class="headerlink" title="Basic Properties"></a><strong>Basic Properties</strong></h2><p>SGD is a powerful and widely used algorithm for optimizing an object function. In most machine learning cases, loss function, which illustrates how “bad” the current model is, is used as the object function. Thus, SGD is used to minimize the loss function and improve the model performance. The idea is first introduced by <a href="https://projecteuclid.org/download/pdf_1/euclid.aoms/1177729586" target="_blank" rel="noopener">Herbert Robbins and Sutton Monro</a> [1].</p>
+<h3 id="General-form-of-object-function"><a href="#General-form-of-object-function" class="headerlink" title="General form of object function"></a><strong>General form of object function</strong></h3><p>Consider the object function $Q(w)$ has the form of a sum:</p>
+<script type="math/tex; mode=display">
+Q(w)= \frac{1}{n}\sum_{i=1}^{n}Q_i(w),</script><p>where $w$ is the parameter from the model. In most cases, the object is to find the optimal parameter so that the value of loss function can be minimized. $Q_i(w)$ is the loss of instance $i$ with parameter $w$. For a defined and differentiable multi-variable function, the value of $F(a)$ increases the fastest when the independent vector $a$ going along the gradient direction. To find the global minimum of the function, one take steps proportional to the negative of the gradient of the function at the current point. The object function should have smoothness preperties, such as <a href="https://en.wikipedia.org/wiki/Differentiable_function" target="_blank" rel="noopener">differentiable</a> or <a href="https://en.wikipedia.org/wiki/Subgradient_method" target="_blank" rel="noopener">subdifferentiable</a>, otherwise the “direction” then cannot be found.</p>
+<h3 id="Gradient-Descent-and-Stochastic-Gradient-Descent"><a href="#Gradient-Descent-and-Stochastic-Gradient-Descent" class="headerlink" title="Gradient Descent and Stochastic Gradient Descent"></a><strong>Gradient Descent and Stochastic Gradient Descent</strong></h3><p>Intuiatively, one would like to calculate the gradient of the regarding the current parameter and move “a little step forward” so that the $Q(w)$ would reduce a little bit. The process could be described as:</p>
+<script type="math/tex; mode=display">
+w= w- \eta\nabla Q(w)= w - \eta\sum_{i=1}^{n}\nabla Q_i(w)/n,</script><p>where $\eta$ is the step size, also known as learning rate; $\nabla Q(w)$ is the gradient of the object function at $w$.</p>
+<p>Imagine someone is at the top of a mountain and looking for a way to the valley bottom. A possible solution is that moving to the steepest direction in every step. That is what happened during a gradient descent algorithm. However, there might be many “pits” on the way down. It is possible that someone recognize a bottom of a pit as the bottom of valley when he has limited sights, since every direction seems upward. </p>
+<p>A sample solution to this issue is to add some “randomness” to the algorithm. In SGD, only one or a subset of the training sample are selected for updating parameter in a particular iteration. The gradient of such a subset might not be the same as that of the whole sample, but it also leads a downward path.</p>
+<p>In summary, both gradient descent and stochastic gradient descent, a set of parameters are updated in an iterative amnner to minimize and error function. The difference is, GD are running though whe complete data set while SGD only use one training sample. In general, SGD often converges much faster than GD but the error function is not as minimized as in the case of GD. Also, the path of SGD wonder more places and is less likely to be trapped into a local minimum.</p>
+<p>A simple example is given in the following section.</p>
+<h2 id="A-simple-Example"><a href="#A-simple-Example" class="headerlink" title="A simple Example"></a><strong>A simple Example</strong></h2><p>Let’s take a linear regression problem as an example. Denote the training set as $(\{x_1, y_1\},\{x_2, y_2\}, \dots, \{x_n, y_n\})$, where $x_i$ is independent variable and $y_i$ is dependent variable. Assume $x$ and $y$ have a linear relationship: </p>
+<script type="math/tex; mode=display">
+y = w_1 + w_2 x,</script><p>and the loss function, or objective function, to be minimized is:</p>
+<script type="math/tex; mode=display">
+Q(w) = \sum_{i=1}^{n}Q_i(w) = \sum_{i=1}^{n}(\hat{y_{i}} - y_{i})^2</script><p>where $\hat{y_{i}}$ is the estimated value of dependent variable under current parameters. When a set of parameter $(w_0, w_1)$ is randomly initiated, $y_i$ can be estimated according to the current model. Thus, in GD algorithm, an update interation is:</p>
+<script type="math/tex; mode=display">
+\left[
+\begin{aligned}
+w_1^{new} \\
+w_2^{new} \\
+\end{aligned}
+\right] 
+=
+\left[
+\begin{aligned}
+w_1^{old} \\
+w_2^{old} \\
+\end{aligned}
+\right] -   \eta 
+\left[
+    \begin{aligned}
+    \sum_{i=1}^n\frac{\partial}{\partial w_2}(w_1^{old} + w_2^{old}x_i -y_i)^2 \\
+    \sum_{i=1}^n\frac{\partial}{\partial w_2}(w_1^{old} + w_2^{old}x_i -y_i)^2 \\
+    \end{aligned}
+\right] = \left[
+\begin{aligned}
+w_1^{old} \\
+w_2^{old} \\
+\end{aligned}
+\right] - \eta
+\left[
+    \begin{aligned}
+    &\sum_{i=1}^n2(w_1^{old} + w_2^{old}x_i -y_i) \\
+    &\sum_{i=1}^n2x_i(w_1^{old} + w_2^{old}x_i -y_i) \\
+    \end{aligned}
+\right].</script><p>For the stocastic gradient descent, an update interation can be written as:</p>
+<script type="math/tex; mode=display">
+\left[
+\begin{aligned}
+w_1^{new} \\
+w_2^{new} \\
+\end{aligned}
+\right] 
+=
+\left[
+\begin{aligned}
+w_1^{old} \\
+w_2^{old} \\
+\end{aligned}
+\right] -   \eta 
+\left[
+    \begin{aligned}
+    \frac{\partial}{\partial w_2}(w_1^{old} + w_2^{old}x_i -y_i)^2 \\
+    \frac{\partial}{\partial w_2}(w_1^{old} + w_2^{old}x_i -y_i)^2 \\
+    \end{aligned}
+\right] = \left[
+\begin{aligned}
+w_1^{old} \\
+w_2^{old} \\
+\end{aligned}
+\right] - \eta
+\left[
+    \begin{aligned}
+    &2(w_1^{old} + w_2^{old}x_i -y_i) \\
+    &2x_i(w_1^{old} + w_2^{old}x_i -y_i) \\
+    \end{aligned}
+\right].</script><p>Note that in GD, Samples of the complete dataset are token into account for an interation, while in SGD the gradient is only evaluated at a single point $x_i$ instead of at the set of all samples. </p>
+<h2 id="Extensions-and-variants"><a href="#Extensions-and-variants" class="headerlink" title="Extensions and variants"></a>Extensions and variants</h2><p>There are many improvements to the basic SGD algorithm. Most algorithms are proposed for finding a “suitable” learning rate at different scenarios. If the learning rate is fixed, the algorithm might diverge when the parameter is too high, while setting it too low makes it slow to converge. The following section presents an introduction to some of the most commonly used optimizers.</p>
+<h3 id="Momentum"><a href="#Momentum" class="headerlink" title="Momentum"></a>Momentum</h3><p>The momentum method is one of the earlies proposals, which is introduced by <a href="http://www.cs.toronto.edu/~hinton/absps/naturebp.pdf" target="_blank" rel="noopener">Rumelhart, Hinton, and Williams</a> [2] [3]. Given an objective function $f(\theta)$ to be minimized, classical momentum is given by:</p>
+<script type="math/tex; mode=display">
+\Delta w_{t+1} = \alpha \Delta w - \eta \nabla Q_i(w), 
+w = w + \Delta w</script><p>where $\Delta w$ is the update at each iteration, $\eta &gt; 0$ is the learning rate, $\alpha \in [0,1]$ is the momentum coefficient, and $\nabla Q_i(\theta)$ is the gradient at $w$. Since direction $d$ of low-curvature have, according to the definition of the gradient, a slower local change in their rate of reduction (i.e., $d^T \Delta Q_i$), they will tend to persist across iterations and be amplified. <a href="https://www.sciencedirect.com/science/article/abs/pii/0041555364901375" target="_blank" rel="noopener">Polyak(1964)</a> [4] showed that classic momentum algorithm can considerably accelerate convergence to a local minimum, requiring $\sqrt R$ times fewer iteration than gradient descent to reach the same level of accuracy, where $R$ is the condition number of the curvature at the minimum.</p>
+<p>Intuitively, the momentum method is similar to that in physics: if the curve of an objective function at point $w$ is steep enough, the previous update might be large enough, makes the momentum, in terms of $\alpha \Delta$ amplify the following update.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a><strong>Reference</strong></h2><p>[1] Robbins, H., &amp; Monro, S. (1951). A stochastic approximation method. The annals of mathematical statistics, 400-407.<br>[2] Rumelhart, D. E., Hinton, G. E., &amp; Williams, R. J. (1988). Learning representations by back-propagating errors. Cognitive modeling, 5(3), 1.<br>[3] Sutskever, I., Martens, J., Dahl, G., &amp; Hinton, G. (2013, February). On the importance of initialization and momentum in deep learning. In International conference on machine learning (pp. 1139-1147).<br>[4] Polyak, B. T. (1964). Some methods of speeding up the convergence of iteration methods. USSR Computational Mathematics and Mathematical Physics, 4(5), 1-17.</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MachineLearning/" rel="tag">MachineLearning</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Math/" rel="tag">Math</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+  </article>
+  
+
+  
+</section>
+</div>
+
+      <footer class="footer">
+  <div class="outer">
+    <ul class="list-inline">
+      <li>
+        &copy;
+        2015-2020
+        OrangeBai
+      </li>
+      <li>
+        
+        Powered by
+        
+        
+        <a href="https://hexo.io" target="_blank">Hexo</a> Theme <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul class="list-inline">
+      <li>
+        
+        
+        <span>
+  <i>PV:<span id="busuanzi_value_page_pv"></span></i>
+  <i>UV:<span id="busuanzi_value_site_uv"></span></i>
+</span>
+        
+      </li>
+      
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Oranges are Juicy"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="http://shenyu-vip.lofter.com" target="_blank" rel="noopener">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
                         </div>
                     </div>
-                </section>
-                <Footer config={config} helper={helper} />
-                <Scripts site={site} config={config} helper={helper} page={page} />
-                <Search config={config} helper={helper} />
-                {use_pjax ? <script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.js"></script> : null}
-                {use_pjax ? <script type="text/javascript" dangerouslySetInnerHTML={{ __html: pjaxJs }}></script> : null}
-            </body>
-        </html>;
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
     }
-};
+    viewer_init()
+</script>
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+    
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+
+</html>
