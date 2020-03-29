@@ -531,7 +531,7 @@ a.police-beian img {
   box-sizing: border-box;
   padding-left: 8%;
   padding-right: 8%;
-  max-width: 64rem;
+  max-width: 72rem;
 }
 @media (max-width: 767px) {
   .post-content {
