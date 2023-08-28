@@ -1,13 +1,19 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+    
 <head>
-  <meta charset="utf-8">
-  
-  
-  <title>Stochastic Gradient Descent | Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="IntroWell, if you look through top journals for machine learning fields in these days, you might notice that more than half of published papers are regarding deep neural networks. This trend, I mean,">
-<meta property="og:type" content="article">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hexo">
+    <title>Stochastic Gradient Descent - Hexo</title>
+    <meta name="author" content="John Doe">
+    
+    
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"John Doe","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"articleBody":"IntroWell, if you look through top journals for machine learning fields in these days, you might notice that more than half of published papers are regarding deep neural networks. This trend, I mean, the popularity of DL is just like that of SVM a decade ago. To better understand the  core ideas of different models, we should focus on details such as model structure, training method, and mathmematical proofs. In this series, I am trying to introduce some basic concepts related to artificial intellegence, esciplly deep learning. To begin with, this post discuss one of the most important and the basic algorithms: Stochastic Gradient Descent, abbreviated SGD.\nBasic PropertiesSGD is a powerful and widely used algorithm for optimizing an object function. In most machine learning cases, loss function, which illustrates how “bad” the current model is, is used as the object function. Thus, SGD is used to minimize the loss function and improve the model performance. The idea is first introduced by Herbert Robbins and Sutton Monro [1].\nGeneral form of object functionConsider the object function $Q(w)$ has the form of a sum:\n\nQ(w)= \\frac{1}{n}\\sum_{i=1}^{n}Q_i(w),where $w$ is the parameter from the model. In most cases, the object is to find the optimal parameter so that the value of loss function can be minimized. $Q_i(w)$ is the loss of instance $i$ with parameter $w$. For a defined and differentiable multi-variable function, the value of $F(a)$ increases the fastest when the independent vector $a$ going along the gradient direction. To find the global minimum of the function, one take steps proportional to the negative of the gradient of the function at the current point. The object function should have smoothness preperties, such as differentiable or subdifferentiable, otherwise the “direction” then cannot be found.\nGradient Descent and Stochastic Gradient DescentIntuiatively, one would like to calculate the gradient of the regarding the current parameter and move “a little step forward” so that the $Q(w)$ would reduce a little bit. The process could be described as:\n\nw= w- \\eta\\nabla Q(w)= w - \\eta\\sum_{i=1}^{n}\\nabla Q_i(w)/n,where $\\eta$ is the step size, also known as learning rate; $\\nabla Q(w)$ is the gradient of the object function at $w$.\nImagine someone is at the top of a mountain and looking for a way to the valley bottom. A possible solution is that moving to the steepest direction in every step. That is what happened during a gradient descent algorithm. However, there might be many “pits” on the way down. It is possible that someone recognize a bottom of a pit as the bottom of valley when he has limited sights, since every direction seems upward. \nA sample solution to this issue is to add some “randomness” to the algorithm. In SGD, only one or a subset of the training sample are selected for updating parameter in a particular iteration. The gradient of such a subset might not be the same as that of the whole sample, but it also leads a downward path.\nIn summary, both gradient descent and stochastic gradient descent, a set of parameters are updated in an iterative amnner to minimize and error function. The difference is, GD are running though whe complete data set while SGD only use one training sample. In general, SGD often converges much faster than GD but the error function is not as minimized as in the case of GD. Also, the path of SGD wonder more places and is less likely to be trapped into a local minimum.\nA simple example is given in the following section.\nA simple ExampleLet’s take a linear regression problem as an example. Denote the training set as $(\\{x_1, y_1\\},\\{x_2, y_2\\}, \\dots, \\{x_n, y_n\\})$, where $x_i$ is independent variable and $y_i$ is dependent variable. Assume $x$ and $y$ have a linear relationship: \n\ny = w_1 + w_2 x,and the loss function, or objective function, to be minimized is:\n\nQ(w) = \\sum_{i=1}^{n}Q_i(w) = \\sum_{i=1}^{n}(\\hat{y_{i}} - y_{i})^2where $\\hat{y_{i}}$ is the estimated value of dependent variable under current parameters. When a set of parameter $(w_0, w_1)$ is randomly initiated, $y_i$ can be estimated according to the current model. Thus, in GD algorithm, an update interation is:\n\n\\left[\n\\begin{aligned}\nw_1^{new} \\\\\nw_2^{new} \\\\\n\\end{aligned}\n\\right] \n=\n\\left[\n\\begin{aligned}\nw_1^{old} \\\\\nw_2^{old} \\\\\n\\end{aligned}\n\\right] -   \\eta \n\\left[\n    \\begin{aligned}\n    \\sum_{i=1}^n\\frac{\\partial}{\\partial w_2}(w_1^{old} + w_2^{old}x_i -y_i)^2 \\\\\n    \\sum_{i=1}^n\\frac{\\partial}{\\partial w_2}(w_1^{old} + w_2^{old}x_i -y_i)^2 \\\\\n    \\end{aligned}\n\\right] = \\left[\n\\begin{aligned}\nw_1^{old} \\\\\nw_2^{old} \\\\\n\\end{aligned}\n\\right] - \\eta\n\\left[\n    \\begin{aligned}\n    &\\sum_{i=1}^n2(w_1^{old} + w_2^{old}x_i -y_i) \\\\\n    &\\sum_{i=1}^n2x_i(w_1^{old} + w_2^{old}x_i -y_i) \\\\\n    \\end{aligned}\n\\right].For the stocastic gradient descent, an update interation can be written as:\n\n\\left[\n\\begin{aligned}\nw_1^{new} \\\\\nw_2^{new} \\\\\n\\end{aligned}\n\\right] \n=\n\\left[\n\\begin{aligned}\nw_1^{old} \\\\\nw_2^{old} \\\\\n\\end{aligned}\n\\right] -   \\eta \n\\left[\n    \\begin{aligned}\n    \\frac{\\partial}{\\partial w_2}(w_1^{old} + w_2^{old}x_i -y_i)^2 \\\\\n    \\frac{\\partial}{\\partial w_2}(w_1^{old} + w_2^{old}x_i -y_i)^2 \\\\\n    \\end{aligned}\n\\right] = \\left[\n\\begin{aligned}\nw_1^{old} \\\\\nw_2^{old} \\\\\n\\end{aligned}\n\\right] - \\eta\n\\left[\n    \\begin{aligned}\n    &2(w_1^{old} + w_2^{old}x_i -y_i) \\\\\n    &2x_i(w_1^{old} + w_2^{old}x_i -y_i) \\\\\n    \\end{aligned}\n\\right].Note that in GD, Samples of the complete dataset are token into account for an interation, while in SGD the gradient is only evaluated at a single point $x_i$ instead of at the set of all samples. \nExtensions and variantsThere are many improvements to the basic SGD algorithm. Most algorithms are proposed for finding a “suitable” learning rate at different scenarios. If the learning rate is fixed, the algorithm might diverge when the parameter is too high, while setting it too low makes it slow to converge. The following section presents an introduction to some of the most commonly used optimizers.\nMomentumThe momentum method is one of the earlies proposals, which is introduced by Rumelhart, Hinton, and Williams [2] [3]. Given an objective function $f(\\theta)$ to be minimized, classical momentum is given by:\n\n\\Delta w_{t+1} = \\alpha \\Delta w - \\eta \\nabla Q_i(w), \nw = w + \\Delta wwhere $\\Delta w$ is the update at each iteration, $\\eta &gt; 0$ is the learning rate, $\\alpha \\in [0,1]$ is the momentum coefficient, and $\\nabla Q_i(\\theta)$ is the gradient at $w$. Since direction $d$ of low-curvature have, according to the definition of the gradient, a slower local change in their rate of reduction (i.e., $d^T \\Delta Q_i$), they will tend to persist across iterations and be amplified. Polyak(1964) [4] showed that classic momentum algorithm can considerably accelerate convergence to a local minimum, requiring $\\sqrt R$ times fewer iteration than gradient descent to reach the same level of accuracy, where $R$ is the condition number of the curvature at the minimum.\nIntuitively, the momentum method is similar to that in physics: if the curve of an objective function at point $w$ is steep enough, the previous update might be large enough, makes the momentum, in terms of $\\alpha \\Delta$ amplify the following update.\nReference[1] Robbins, H., &amp; Monro, S. (1951). A stochastic approximation method. The annals of mathematical statistics, 400-407.[2] Rumelhart, D. E., Hinton, G. E., &amp; Williams, R. J. (1988). Learning representations by back-propagating errors. Cognitive modeling, 5(3), 1.[3] Sutskever, I., Martens, J., Dahl, G., &amp; Hinton, G. (2013, February). On the importance of initialization and momentum in deep learning. In International conference on machine learning (pp. 1139-1147).[4] Polyak, B. T. (1964). Some methods of speeding up the convergence of iteration methods. USSR Computational Mathematics and Mathematical Physics, 4(5), 1-17.\n","dateCreated":"2019-07-13T02:39:19+01:00","dateModified":"2019-07-24T21:23:29+01:00","datePublished":"2019-07-13T02:39:19+01:00","description":"","headline":"Stochastic Gradient Descent","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2019/07/13/stochastic-gradient-descent/"},"publisher":{"@type":"Organization","name":"John Doe","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://plus.google.com/","https://www.linkedin.com/profile/","mailto"]},"url":"http://example.com/2019/07/13/stochastic-gradient-descent/","keywords":"Math, MachineLearning"}</script>
+    <meta name="description" content="IntroWell, if you look through top journals for machine learning fields in these days, you might notice that more than half of published papers are regarding deep neural networks. This trend, I mean,">
+<meta property="og:type" content="blog">
 <meta property="og:title" content="Stochastic Gradient Descent">
 <meta property="og:url" content="http://example.com/2019/07/13/stochastic-gradient-descent/index.html">
 <meta property="og:site_name" content="Hexo">
@@ -19,91 +25,327 @@
 <meta property="article:tag" content="Math">
 <meta property="article:tag" content="MachineLearning">
 <meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
     
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
-
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-  
     
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+        
+    
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-whqctoslyux9ienhypoucaaubmr9re4mw9ovvthqp711mhfz7esivnbcfo4a.min.css">
 
-  
-  
-<meta name="generator" content="Hexo 6.3.0"></head>
+    <!--STYLES END-->
+    
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
+    
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+
+<header id="header" data-behavior="5">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a
+            class="header-title-link"
+            href="/%20"
+            aria-label=""
+        >
+            Hexo
+        </a>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+    
         
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
+            <a
+                class="header-right-picture "
+                href="#about"
+                aria-label="Open the link: /#about"
+            >
         
         
-          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
-        
-        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
-      </div>
-    </div>
-  </div>
+        </a>
+    
 </header>
 
-      <div class="outer">
-        <section id="main"><article id="post-stochastic-gradient-descent" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/07/13/stochastic-gradient-descent/" class="article-date">
-  <time class="dt-published" datetime="2019-07-13T01:39:19.000Z" itemprop="datePublished">2019-07-13</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Math/">Math</a>
-  </div>
+            <!-- Define author's picture -->
 
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+
+<nav id="sidebar" data-behavior="5">
+    <div class="sidebar-container">
         
-  
-    <h1 class="p-name article-title" itemprop="headline name">
-      Stochastic Gradient Descent
-    </h1>
-  
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/"
+                            
+                            rel="noopener"
+                            title="Home"
+                        >
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-categories"
+                            
+                            rel="noopener"
+                            title="Categories"
+                        >
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Categories</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-tags"
+                            
+                            rel="noopener"
+                            title="Tags"
+                        >
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/all-archives"
+                            
+                            rel="noopener"
+                            title="Archives"
+                        >
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Archives</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link open-algolia-search"
+                            href="#search"
+                            
+                            rel="noopener"
+                            title="Search"
+                        >
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="#about"
+                            
+                            rel="noopener"
+                            title="About"
+                        >
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://github.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="GitHub"
+                        >
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="http://stackoverflow.com/users"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Stack Overflow"
+                        >
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://twitter.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Twitter"
+                        >
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://facebook.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Facebook"
+                        >
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://plus.google.com/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="Google +"
+                        >
+                        <i class="sidebar-button-icon fab fa-google-plus" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google +</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="https://www.linkedin.com/profile/"
+                            
+                                target="_blank"
+                            
+                            rel="noopener"
+                            title="LinkedIn"
+                        >
+                        <i class="sidebar-button-icon fab fa-linkedin" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">LinkedIn</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/mailto"
+                            
+                            rel="noopener"
+                            title="Mail"
+                        >
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a
+                            class="sidebar-button-link "
+                            href="/atom.xml"
+                            
+                            rel="noopener"
+                            title="RSS"
+                        >
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
 
-      </header>
+            
+            <div id="main" data-behavior="5"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
     
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a><strong>Intro</strong></h2><p>Well, if you look through top journals for machine learning fields in these days, you might notice that more than half of published papers are regarding deep neural networks. This trend, I mean, the popularity of DL is just like that of SVM a decade ago. To better understand the  core ideas of different models, we should focus on details such as model structure, training method, and mathmematical proofs. In this series, I am trying to introduce some basic concepts related to artificial intellegence, esciplly deep learning. To begin with, this post discuss one of the most important and the basic algorithms: Stochastic Gradient Descent, abbreviated SGD.</p>
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Stochastic Gradient Descent
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-07-13T02:39:19+01:00">
+	
+		    Jul 13, 2019
+    	
+    </time>
+    
+        <span>in </span>
+        
+    <a class="category-link" href="/categories/Math/">Math</a>
+
+
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a><strong>Intro</strong></h2><p>Well, if you look through top journals for machine learning fields in these days, you might notice that more than half of published papers are regarding deep neural networks. This trend, I mean, the popularity of DL is just like that of SVM a decade ago. To better understand the  core ideas of different models, we should focus on details such as model structure, training method, and mathmematical proofs. In this series, I am trying to introduce some basic concepts related to artificial intellegence, esciplly deep learning. To begin with, this post discuss one of the most important and the basic algorithms: Stochastic Gradient Descent, abbreviated SGD.</p>
 <h2 id="Basic-Properties"><a href="#Basic-Properties" class="headerlink" title="Basic Properties"></a><strong>Basic Properties</strong></h2><p>SGD is a powerful and widely used algorithm for optimizing an object function. In most machine learning cases, loss function, which illustrates how “bad” the current model is, is used as the object function. Thus, SGD is used to minimize the loss function and improve the model performance. The idea is first introduced by <a target="_blank" rel="noopener" href="https://projecteuclid.org/download/pdf_1/euclid.aoms/1177729586">Herbert Robbins and Sutton Monro</a> [1].</p>
 <h3 id="General-form-of-object-function"><a href="#General-form-of-object-function" class="headerlink" title="General form of object function"></a><strong>General form of object function</strong></h3><p>Consider the object function $Q(w)$ has the form of a sum:</p>
 <script type="math/tex; mode=display">
@@ -190,142 +432,320 @@ w = w + \Delta w</script><p>where $\Delta w$ is the update at each iteration, $\
 <p>Intuitively, the momentum method is similar to that in physics: if the curve of an objective function at point $w$ is steep enough, the previous update might be large enough, makes the momentum, in terms of $\alpha \Delta$ amplify the following update.</p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a><strong>Reference</strong></h2><p>[1] Robbins, H., &amp; Monro, S. (1951). A stochastic approximation method. The annals of mathematical statistics, 400-407.<br>[2] Rumelhart, D. E., Hinton, G. E., &amp; Williams, R. J. (1988). Learning representations by back-propagating errors. Cognitive modeling, 5(3), 1.<br>[3] Sutskever, I., Martens, J., Dahl, G., &amp; Hinton, G. (2013, February). On the importance of initialization and momentum in deep learning. In International conference on machine learning (pp. 1139-1147).<br>[4] Polyak, B. T. (1964). Some methods of speeding up the convergence of iteration methods. USSR Computational Mathematics and Mathematical Physics, 4(5), 1-17.</p>
 
-      
+            
+
+
+        </div>
     </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/13/stochastic-gradient-descent/" data-id="cllvc8mao0000p8vf3j97ebny" data-title="Stochastic Gradient Descent" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MachineLearning/" rel="tag">MachineLearning</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Math/" rel="tag">Math</a></li></ul>
-
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2023/08/28/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
+    <div id="post-footer" class="post-footer main-content-wrap">
         
-          Hello World
-        
-      </div>
-    </a>
-  
-  
-</nav>
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/MachineLearning/" rel="tag">MachineLearning</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/Math/" rel="tag">Math</a>
 
-  
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/08/28/hello-world/"
+                    data-tooltip="Hello World"
+                    aria-label="PREVIOUS: Hello World"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://example.com/2019/07/13/stochastic-gradient-descent/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=http://example.com/2019/07/13/stochastic-gradient-descent/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=http://example.com/2019/07/13/stochastic-gradient-descent/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
 </article>
 
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Math/">Math</a></li></ul>
-    </div>
-  </div>
 
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/MachineLearning/" rel="tag">MachineLearning</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Math/" rel="tag">Math</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/MachineLearning/" style="font-size: 10px;">MachineLearning</a> <a href="/tags/Math/" style="font-size: 10px;">Math</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">August 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2023/08/28/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
-            <a href="/2019/07/13/stochastic-gradient-descent/">Stochastic Gradient Descent</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2023 John Doe<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 John Doe. All Rights Reserved.
+    </span>
 </footer>
 
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a
+                    class="post-action-btn btn btn--default tooltip--top"
+                    href="/2023/08/28/hello-world/"
+                    data-tooltip="Hello World"
+                    aria-label="PREVIOUS: Hello World"
+                >
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    <a
+                        class="post-action-btn btn btn--disabled"
+                        aria-hidden="true"
+                    >
+                        
+                        <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a
+                class="post-action-btn btn btn--default btn-open-shareoptions"
+                href="#btn-open-shareoptions"
+                aria-label="Share this post"
+            >
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://www.facebook.com/sharer/sharer.php?u=http://example.com/2019/07/13/stochastic-gradient-descent/"
+                    title="Share on Facebook"
+                    aria-label="Share on Facebook"
+                >
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://twitter.com/intent/tweet?text=http://example.com/2019/07/13/stochastic-gradient-descent/"
+                    title="Share on Twitter"
+                    aria-label="Share on Twitter"
+                >
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="https://plus.google.com/share?url=http://example.com/2019/07/13/stochastic-gradient-descent/"
+                    title="Share on Google+"
+                    aria-label="Share on Google+"
+                >
+                    <i class="fab fa-google-plus" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://www.facebook.com/sharer/sharer.php?u=http://example.com/2019/07/13/stochastic-gradient-descent/"
+                        aria-label="Share on Facebook"
+                    >
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://twitter.com/intent/tweet?text=http://example.com/2019/07/13/stochastic-gradient-descent/"
+                        aria-label="Share on Twitter"
+                    >
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="https://plus.google.com/share?url=http://example.com/2019/07/13/stochastic-gradient-descent/"
+                        aria-label="Share on Google+"
+                    >
+                        <i class="fab fa-google-plus" aria-hidden="true"></i><span>Share on Google+</span>
+                    </a>
+                </li>
+            
+        </ul>
     </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+
+
+            
+        </div>
+        
+
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <h4 id="about-card-name">John Doe</h4>
+        
+            <div id="about-card-bio"><p>author.bio</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>author.job</p>
+
+            </div>
+        
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-h3q5uvubxvizr9eye8df2v53ervvy0nqfokuojgbkoxlq0sdglw1gno4uyj1.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
     
 
 
-<script src="/js/jquery-3.6.4.min.js"></script>
 
 
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
-<script type="text/x-mathjax-config">
+    <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         tex2jax: {
             inlineMath: [ ["$","$"], ["\\(","\\)"] ],
